@@ -66,30 +66,5 @@ open = false
 dockId = 6
 
 
-[Window.2Live Control]
-width = 1228.000000
-height = 1966.000000
-
-
-[Window.4Live Control]
-width = 1228.000000
-height = 883.000000
-
-
-[Window.3Live Control]
-width = 1228.000000
-height = 1078.000000
-
-
-[Window.6Live Control]
-width = 2587.000000
-height = 688.000000
-
-
-[Window.5Live Control]
-width = 2587.000000
-height = 1273.000000
-
-
 [Workbench]
 type = 4
