@@ -25,6 +25,4 @@ You can also click the `B` button to invert the vertical axis of the sticks.
 
 #runsofa-button(file="assets/labs/demo_gamepad/lab_demo_gamepad.py")
 
-#include(assets/labs/demo_gamepad/sections/authors.md)
-
 
