@@ -1,6 +1,8 @@
 # Emio.Demo Gamepad
 
-![](data/images/emio_demos.gif)
+<p align="center">
+  <img src="data/images/emio_demos.gif" class="centered"/>
+</p>
 
 ![](data/images/xbox_mappings_demos.jpg)
 
