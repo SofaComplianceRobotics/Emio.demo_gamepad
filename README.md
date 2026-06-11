@@ -1,5 +1,7 @@
 # Emio.Demo Gamepad
 
+![](data/images/emio_demos.gif)
+
 ![](data/images/xbox_mappings_demos.jpg)
 
 This demo shows how to use the `Sofa.GamepadController` module to control a SOFA simulation using a gamepad to move the gripper of Emio 
