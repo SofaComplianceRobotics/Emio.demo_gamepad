@@ -1,4 +1,4 @@
-# Lab Demo Gamepad
+# Demo Gamepad
 
 
 <!-- Highlight the summary / overview of the lab -->
