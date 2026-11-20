@@ -38,26 +38,32 @@ def createScene(rootnode):
     emio.effector.addObject("RigidMapping", rigidIndexPerPoint=[0, 1, 2, 3])
 
     # Target
-    effectorTarget = modelling.addChild('Target')
-    effectorTarget.addObject('EulerImplicitSolver', firstOrder=True)
-    effectorTarget.addObject('CGLinearSolver', iterations=50, tolerance=1e-10, threshold=1e-10)
-    effectorTarget.addObject('MechanicalObject', template='Rigid3',
-                             position=[0, -170, 0, 0, 0, 0, 1],
-                             showObject=True, showObjectScale=20)
-
+    target = modelling.addChild('Target')
+    target.addObject('EulerImplicitSolver', firstOrder=True)
+    target.addObject('CGLinearSolver', iterations=50, tolerance=1e-10, threshold=1e-10)
+    target.addObject('MechanicalObject', template='Rigid3',
+                                        position=[0, -170, 0, 0, 0, 0, 1],
+                                        showObject=True, showObjectScale=20)
+    limit=100
+    target.addData(name="min", value=-limit, type="float")
+    target.addData(name="max", value=limit, type="float")
     
     # Add inverse components and GUI
     import Sofa.ImGui as MyGui
-    emio.addInverseComponentAndGUI(effectorTarget.getMechanicalState().position.linkpath, barycentric=True)
-    MyGui.MoveWindow.setTCPLimits(-100, 100,
-                                emio.motors[0].JointActuator.minAngle.value,
-                                emio.motors[0].JointActuator.maxAngle.value)
-    MyGui.MoveWindow.addAccessory("Gripper's opening (mm)", emio.centerpart.effector.Distance.DistanceMapping.restLengths, 8, 70)
-    MyGui.ProgramWindow.addGripper(emio.centerpart.effector.Distance.DistanceMapping.restLengths, 8, 70)
+    emio.addInverseComponentAndGUI(target.getMechanicalState().position.linkpath, barycentric=True, withGUI=False)
 
+    MyGui.setInverseProblemSolver(solver=rootnode.ConstraintSolver)
+    MyGui.addTCP(label="TCP", 
+                 constraint=emio.effector.EffectorCoord, 
+                 min=target.min.value, max=target.max.value)
+    MyGui.addAccessoryFeature(accessoryLabel="Gripper", 
+                              featureLabel="Opening (mm)", 
+                              data=emio.centerpart.effector.Distance.DistanceMapping.restLengths, 
+                              min=8, 
+                              max=70)
     # Components for the connection to the real robot 
     emio.addConnectionComponents()
 
     # Gamepad controller
     from modules import gamepadsofacontroller
-    gamepadsofacontroller.addGamepadControl(rootnode, effectorTarget.getMechanicalState(), emio)
+    gamepadsofacontroller.addGamepadControl(rootnode, target.getMechanicalState(), emio)
