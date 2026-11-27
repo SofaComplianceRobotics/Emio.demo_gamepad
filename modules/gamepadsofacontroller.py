@@ -1,7 +1,7 @@
 from sofagamepadcontroller import GamepadSofaController, GamepadCallbacks
 import numpy as np
 
-def addGamepadControl(rootnode, targetMO, emio):
+def addGamepadControl(rootnode, target, emio, initialPosition):
 
     # Scales to adjust the sensitivity of the target movement and 
     # gripper control based on the gamepad input
@@ -12,22 +12,27 @@ def addGamepadControl(rootnode, targetMO, emio):
     gripperScale = GRIPPER_SCALE
     invert = False
 
+    targetMO = target.getMechanicalState()
+
     def openGripper(value: int):
         emio.centerpart.effector.Distance.DistanceMapping.restLengths[0] += value * gripperScale # the factor is here to adjust the speed of the gripper opening/closing
-        emio.centerpart.effector.Distance.DistanceMapping.restLengths[0] = min(max(emio.centerpart.effector.Distance.DistanceMapping.restLengths[0], 15), 50) # limits of the gripper opening
+        emio.centerpart.effector.Distance.DistanceMapping.restLengths[0] = min(max(emio.centerpart.effector.Distance.DistanceMapping.restLengths[0], target.minDistance.value), target.maxDistance.value) # limits of the gripper opening
 
     def closeGripper(value: int):
         emio.centerpart.effector.Distance.DistanceMapping.restLengths[0] -= value * gripperScale # the factor is here to adjust the speed of the gripper opening/closing
-        emio.centerpart.effector.Distance.DistanceMapping.restLengths[0] = min(max(emio.centerpart.effector.Distance.DistanceMapping.restLengths[0], 15), 50) # limits of the gripper opening
+        emio.centerpart.effector.Distance.DistanceMapping.restLengths[0] = min(max(emio.centerpart.effector.Distance.DistanceMapping.restLengths[0], target.minDistance.value), target.maxDistance.value) # limits of the gripper opening
 
     def moveTargetXZ(horizontal: int, vertical: int):
         target_pos = targetMO.position.value[0][0:3]
         target_pos = target_pos + targetScale * np.array([horizontal, 0, -vertical * [1, -1][invert]])
+        target_pos[0] = min(max(target_pos[0], target.min.value), target.max.value) # limits of the target movement in X
+        target_pos[2] = min(max(target_pos[2], target.min.value), target.max.value) # limits of the target movement in Z
         targetMO.position.value = [target_pos.tolist() + [0., 0., 0., 1.]]
     
     def moveTargetY(_: int, vertical: int):
         target_pos = targetMO.position.value[0][0:3]
         target_pos = target_pos + targetScale * np.array([0, vertical * [1, -1][invert], 0])
+        target_pos[1] = min(max(target_pos[1], initialPosition[1] + target.min.value), initialPosition[1] + target.max.value) # limits of the target movement in Y
         targetMO.position.value = [target_pos.tolist() + [0., 0., 0., 1.]]
 
     def precisionMode():
