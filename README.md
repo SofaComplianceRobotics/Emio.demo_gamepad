@@ -10,3 +10,9 @@ This demo shows how to use the [Sofa.GamepadController](https://github.com/SofaC
 It uses the `inputs` Python package to handle gamepad events. Press the `A`button to toggle the precision mode. Left `Z` trigger closes the gripper and right `Z` trigger opens it. You can also click the `B` button to invert the vertical axis of the sticks.
 
 You can add it into Emio Labs using the labs configurator.
+
+To use it without Emio Labs, you need to install [Sofa.GamepadController](https://github.com/SofaComplianceRobotics/Sofa.GamepadController) with the requirements:
+```
+cd ./Emio.demo_gamepad
+python -m pip install -r requirements.txt
+```
