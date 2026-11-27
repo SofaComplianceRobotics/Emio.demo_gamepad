@@ -41,10 +41,11 @@ def createScene(rootnode):
 
     # Target
     target = modelling.addChild('Target')
+    initialPosition = [0, -210, 0, 0, 0, 0, 1]
     target.addObject('EulerImplicitSolver', firstOrder=True)
     target.addObject('CGLinearSolver', iterations=50, tolerance=1e-10, threshold=1e-10)
     target.addObject('MechanicalObject', template='Rigid3',
-                                        position=[0, -210, 0, 0, 0, 0, 1],
+                                        position=initialPosition,
                                         showObject=True, showObjectScale=20)
     limit=60
     target.addData(name="min", value=-limit, type="float")
@@ -82,4 +83,4 @@ def createScene(rootnode):
 
     # Gamepad controller
     from modules import gamepadsofacontroller
-    gamepadsofacontroller.addGamepadControl(rootnode, target.getMechanicalState(), emio)
+    gamepadsofacontroller.addGamepadControl(rootnode, target, emio, initialPosition)
